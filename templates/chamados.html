@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Chamados - Painel Agidesk{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Search and Filter Controls -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar chamados...">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="statusFilter">
+                <option value="">Todos os Status</option>
+                <option value="open">Aberto</option>
+                <option value="in_progress">Em Andamento</option>
+                <option value="resolved">Resolvido</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="responsibleFilter">
+                <option value="">Todos os Responsáveis</option>
+                {% for responsible in responsibles %}
+                <option value="{{ responsible.id }}">{{ responsible.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Adicione isso próximo ao topo da tabela -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Chamados</h2>
+        <button class="btn btn-primary" onclick="refreshData()">
+            <i class="fas fa-sync-alt"></i> Atualizar Dados
+        </button>
+    </div>
+
+    <!-- Tickets Table -->
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Status</th>
+                    <th>Responsável</th>
+                    <th>Data de Abertura</th>
+                    <th>Tempo Aberto</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.id }}</td>
+                    <td>{{ ticket.display_title }}</td>
+                    <td>
+                        <span class="badge bg-{{ ticket.status_color }}">
+                            {% if ticket.status_id == '1' %}
+                                Aberto
+                            {% elif ticket.status_id == '2' %}
+                                Em Andamento
+                            {% elif ticket.status_id == '3' %}
+                                Resolvido
+                            {% elif ticket.status_id == '4' %}
+                                Fechado
+                            {% else %}
+                                Status Desconhecido
+                            {% endif %}
+                        </span>
+                    </td>
+                    <td>{{ ticket.responsible or 'Não atribuído' }}</td>
+                    <td>{{ ticket.created_at }}</td>
+                    <td>{{ ticket.time_open }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="viewDetails('{{ ticket.id }}')">
+                            Detalhes
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Ticket Details Modal -->
+    <div class="modal fade" id="ticketModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes do Chamado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="ticketDetails">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Filter functionality
+    document.getElementById('searchInput').addEventListener('input', filterTickets);
+    document.getElementById('statusFilter').addEventListener('change', filterTickets);
+    document.getElementById('responsibleFilter').addEventListener('change', filterTickets);
+
+    function filterTickets() {
+        // Implementation of filter logic
+    }
+
+    function viewDetails(ticketId) {
+        // Implementation of ticket details view
+    }
+
+    function refreshData() {
+        fetch('/api/refresh-cache', {
+            method: 'POST',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload();
+            }
+        })
+        .catch(error => console.error('Erro:', error));
+    }
+
+    // Auto-refresh a cada 5 minutos
+    setInterval(refreshData, 300000);
+</script>
+{% endblock %} 

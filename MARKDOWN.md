@@ -41,7 +41,7 @@ painel-agidesk/
 │ ├── routes.py
 │ ├── models.py (Opcional)
 │ └── services/
-│ └── agidesk_service.py
+│   └── agidesk_service.py
 │
 ├── templates/
 │ ├── base.html

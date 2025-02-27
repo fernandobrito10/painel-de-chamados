@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Filtros Avançados - Painel Agidesk{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Filter Panel -->
+            <div class="card">
+                <div class="card-header">
+                    Filtros Avançados
+                </div>
+                <div class="card-body">
+                    <form id="filterForm">
+                        <!-- Date Range -->
+                        <div class="mb-3">
+                            <label class="form-label">Período</label>
+                            <input type="date" class="form-control mb-2" id="startDate">
+                            <input type="date" class="form-control" id="endDate">
+                        </div>
+
+                        <!-- Status -->
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="open" id="statusOpen">
+                                <label class="form-check-label">Aberto</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="in_progress" id="statusProgress">
+                                <label class="form-check-label">Em Andamento</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="resolved" id="statusResolved">
+                                <label class="form-check-label">Resolvido</label>
+                            </div>
+                        </div>
+
+                        <!-- Responsible -->
+                        <div class="mb-3">
+                            <label class="form-label">Responsável</label>
+                            <select class="form-select" multiple id="responsibleSelect">
+                                {% for responsible in responsibles %}
+                                <option value="{{ responsible.id }}">{{ responsible.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Priority -->
+                        <div class="mb-3">
+                            <label class="form-label">Prioridade</label>
+                            <select class="form-select" id="prioritySelect">
+                                <option value="">Todas</option>
+                                <option value="high">Alta</option>
+                                <option value="medium">Média</option>
+                                <option value="low">Baixa</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Aplicar Filtros</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <!-- Results Area -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Resultados</span>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="exportResults()">
+                        Exportar
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="resultsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Status</th>
+                                    <th>Responsável</th>
+                                    <th>Prioridade</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsBody">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('filterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        applyFilters();
+    });
+
+    function applyFilters() {
+        // Implementation of filter application
+    }
+
+    function exportResults() {
+        // Implementation of export functionality
+    }
+</script>
+{% endblock %} 
